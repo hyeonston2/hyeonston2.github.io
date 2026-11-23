@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hyeonseok Jeong | 3D Geospatial Research</title>
+<meta name="description" content="Portfolio of Hyeonseok Jeong: 3D geospatial information and GeoAI surrogate models for urban wind.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #1f2328;
+    --muted: #57606a;
+    --rule: #d0d7de;
+    --link: #0b5cad;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115;
+      --text: #e6e8eb;
+      --muted: #9aa4af;
+      --rule: #30363d;
+      --link: #6cb0f5;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Pretendard", -apple-system, "Segoe UI", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 56px 16px 80px; }
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 24px; margin-bottom: 8px; }
+  h1 { font-size: 30px; line-height: 1.3; margin: 0 0 6px; font-weight: 700; }
+  .affil { color: var(--muted); margin: 0; }
+  nav { margin-top: 14px; font-size: 15px; }
+  nav a { margin-right: 18px; }
+  h2 {
+    font-size: 20px; margin: 48px 0 12px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule); font-weight: 700;
+  }
+  h3 { font-size: 18px; margin: 32px 0 4px; line-height: 1.45; }
+  .meta { color: var(--muted); font-size: 15px; margin: 0 0 12px; }
+  p { margin: 0 0 14px; }
+  ul { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  figure { margin: 20px 0 24px; }
+  figure img { width: 100%; height: auto; display: block; border: 1px solid var(--rule); background: #fff; }
+  figcaption { color: var(--muted); font-size: 14px; margin-top: 8px; line-height: 1.55; }
+  dl { margin: 0; }
+  dt { font-weight: 600; margin-top: 10px; }
+  dd { margin: 0 0 4px; color: var(--muted); }
+  .ko { color: var(--muted); font-size: 15px; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 14px; }
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    main { padding-top: 36px; }
+    h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Hyeonseok Jeong</h1>
+    <p class="affil">M.S. student (4th semester), Urban Space Research Institute, Department of Urban Information Engineering, Anyang University, Korea. Starting Ph.D. studies in 2027.</p>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#research">Research</a>
+      <a href="#tools">Tools</a>
+    </nav>
+  </header>
+
+  <section id="about">
+    <h2>About</h2>
+    <p>I work on 3D geospatial information for cities. As drones and Urban Air Mobility (UAM) begin to fly between buildings, maps need more than a flat footprint: building heights, the wind around them, and which parts of the air space are occupied. My research covers how to produce this information and how to compute it fast enough for large areas.</p>
+    <ul>
+      <li>3D geospatial data: LOD1 building models and voxels</li>
+      <li>GeoAI: deep-learning surrogate models that approximate computational fluid dynamics (CFD)</li>
+    </ul>
+    <p>In my Ph.D., I plan to work on keeping 3D city models up to date: detecting change from satellite imagery with GeoAI and rebuilding only the changed areas through image-based 3D reconstruction.</p>
+    <p class="ko">한국어 소개와 공부 기록은 <a href="https://blog.naver.com/jhs7838">네이버 블로그(3D 공간정보 연구노트)</a>에 있습니다.</p>
+  </section>
+
+  <section id="research">
+    <h2>Research</h2>
+    <h3>Surrogate-model-based estimation of 3D wind fields around urban buildings for UAM operations</h3>
+    <p class="meta">M.S. thesis, Anyang University (under review; figures and numbers may change in the final version)</p>
+    <p>UAM aircraft take off and land in dense urban areas and fly through the low-altitude space between buildings, where the wind changes sharply with location and height. CFD can resolve this flow, but it is too expensive to run over a whole region or to repeat whenever the city changes. I built a procedure that learns from CFD results and predicts 3D wind fields directly from building geometry.</p>
+    <ul>
+      <li>Built LOD1 building geometry for Anyang and selected 80 districts covering a range of building density and mean height.</li>
+      <li>Ran steady-state RANS simulations for 8 wind directions per district (640 cases; reference wind 6 m/s at 50 m above ground).</li>
+      <li>Converted the results to 5 m voxels and trained a 3D U-Net that takes building occupancy, distance to the nearest building, wind direction, and height, and predicts the wind components u, v, w and turbulent kinetic energy k.</li>
+      <li>Split the data by district (56 training, 12 validation, 12 test) so that no district appears in more than one set.</li>
+    </ul>
+    <p>On 96 test cases, the mean absolute errors over air cells were 0.262, 0.240, and 0.115 m/s for u, v, and w, and 0.191 m²/s² for k. Applying the model to 14,787 urban districts in Gyeonggi Province (about 1,331 km²) took about 36 minutes; the same workload at this study's CFD throughput corresponds to roughly 1.6 years.</p>
+    <figure>
+      <img src="assets/campus-wind-comparison.png" alt="Three-by-three grid of maps comparing CFD and surrogate model wind fields on a university campus" loading="lazy">
+      <figcaption>Anyang University campus, which was not used for training. Columns: CFD result (reference), surrogate prediction, and their difference. Rows: horizontal wind speed, vertical wind w, and turbulent kinetic energy, at 22.5 m height under a north wind. Labels in the figure are in Korean.</figcaption>
+    </figure>
+    <p><strong>Limitations.</strong> The evaluation measures how well the surrogate reproduces CFD, not field observations. For wind directions between the trained ones, predictions drift toward the neighboring trained direction. Comparison with measurements and links to aircraft-specific operating limits are next steps.</p>
+    <p>Interactive viewer: <a href="https://hyeonston2.github.io/vertiport-windmap/">vertiport-windmap</a> (<a href="https://github.com/hyeonston2/vertiport-windmap">source</a>)</p>
+
+    <h3>Drone and UAM corridors on a 3D hexagonal grid</h3>
+    <p class="meta">Poster, 2026 Esri User Conference, San Diego (Map Gallery A-12-08)</p>
+    <p>Low-altitude routes for drones and UAM depend on wind, restricted airspace, terrain, and buildings at once. I divided the airspace into H3 hexagonal cells stacked by altitude, attached these four kinds of data to each cell, blocked cells that cannot be flown through, and searched for routes over the remaining cells weighted by risk. Built with ArcGIS Pro and Python.</p>
+  </section>
+
+  <section id="tools">
+    <h2>Tools</h2>
+    <dl>
+      <dt>Programming and machine learning</dt>
+      <dd>Python, 3D U-Net</dd>
+      <dt>Simulation</dt>
+      <dd>OpenFOAM (RANS)</dd>
+      <dt>3D web mapping and GIS</dt>
+      <dd>CesiumJS, ArcGIS Pro, H3</dd>
+    </dl>
+  </section>
+
+  <footer>
+    Last updated November 2026.
+  </footer>
+</main>
+</body>
+</html>
